@@ -6,4 +6,4 @@ python端为:https://github.com/stay-miku/OpenAI_Chat3.5-python-server
 
 (github新手,要是有啥问题请见谅~)
 
-(代码写的很懒,别打我)
+(代码写的很烂,别打我)
