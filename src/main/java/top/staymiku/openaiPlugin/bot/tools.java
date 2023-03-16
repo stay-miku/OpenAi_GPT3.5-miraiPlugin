@@ -1,5 +1,6 @@
 package top.staymiku.openaiPlugin.bot;
 
+import net.mamoe.mirai.event.events.FriendMessageEvent;
 import net.mamoe.mirai.event.events.GroupMessageEvent;
 import net.mamoe.mirai.message.data.At;
 import net.mamoe.mirai.message.data.MessageChain;
@@ -13,7 +14,7 @@ public class tools {
     public static String assistantError = "上一条消息不是ai的发言,不可以重新回答哦";
     public static String clientError = "连接服务器错误,请稍后再试";
     public static String userError = "你还没有创建哦~使用命令 #创建 <名字> [主人名字] 以创建哦";
-    public static String getError(String answer){
+    public static String getError(String answer){   // 识别错误消息并替换
         if (Objects.equals(answer, "false")){
             return userError;
         }
@@ -54,7 +55,11 @@ public class tools {
         return dot_num < 2;
     }
     public static void send(GroupMessageEvent event, String str){
-        MessageChain messages = new MessageChainBuilder().append(new At(event.getSender().getId())).append(" " + str).build();
+        MessageChain messages = new MessageChainBuilder().append(new At(event.getSender().getId())).append(" ").append(str).build();
         event.getGroup().sendMessage(messages);
+    }
+    public static void send(FriendMessageEvent event, String str){
+        MessageChain messages = new MessageChainBuilder().append(str).build();
+        event.getFriend().sendMessage(messages);
     }
 }
