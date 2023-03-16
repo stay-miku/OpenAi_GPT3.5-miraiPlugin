@@ -8,11 +8,11 @@ import net.mamoe.mirai.message.data.MessageChainBuilder;
 import java.util.Objects;
 
 public class tools {
-    public static String limitError = "api达到限制,请稍后再使用";
-    public static String serverError = "api网络错误,请稍后再尝试";
-    public static String assistantError = "上一个不是机器人的发言,不可重新回答";
-    public static String clientError = "客户端网络错误,请稍后再试";
-    public static String userError = "你还没有创建哦~";
+    public static String limitError = "api达到速度限制,请稍后再使用";
+    public static String serverError = "api网络错误,请稍后再尝试或检查服务端日志";
+    public static String assistantError = "上一条消息不是ai的发言,不可以重新回答哦";
+    public static String clientError = "连接服务器错误,请稍后再试";
+    public static String userError = "你还没有创建哦~使用命令 #创建 <名字> [主人名字] 以创建哦";
     public static String getError(String answer){
         if (Objects.equals(answer, "false")){
             return userError;

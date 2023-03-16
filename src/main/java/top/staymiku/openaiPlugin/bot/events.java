@@ -10,9 +10,11 @@ import org.jetbrains.annotations.NotNull;
 import top.staymiku.openaiPlugin.openai.controls;
 
 import java.util.List;
-import java.util.Objects;
 
 public class events extends SimpleListenerHost {
+
+    // 本来想把命令系统拆分成一个单独的函数的(然后懒了)
+
     public static String help = "主要功能\n(<>内为必填,[]内为选填,所有选项只支持纯文本,除了@bot别的都不允许使用空格):\n" +
             "@bot <文本>:与机器人对话\n" +
             "#创建 <设定名字> [主人名字]: 创建,所有操作都需创建后执行(名字和主人名只对默认设定有效)\n" +
@@ -21,8 +23,8 @@ public class events extends SimpleListenerHost {
             "#清除: 清除历史对话(失忆~)\n" +
             "#修改设定 <设定提示词>: 修改设定\n" +
             "#重置设定: 重置为默认设定(会清空自定义的设定)\n" +
-            "#设置名字 <名字>: 设定名字\n" +
-            "#设置主人名字 <主人名字>: 设置主人名字\n" +
+            "#设置名字 <名字>: 设定名字(会清空自定义的设定)\n" +
+            "#设置主人名字 <主人名字>: 设置主人名字(会清空自定义的设定)\n" +
             "#不常用命令帮助: 如名";
     public static String unCommonHelp = "不常用命令:\n" +
             "#设置温度 <0-2之间的数字>: 该值代表问题对回答的约束力,2约束最小\n" +
@@ -38,16 +40,26 @@ public class events extends SimpleListenerHost {
             "#温度: 获取当前温度";
     public static String badParameter = "错误的参数,使用#ai帮助 查看使用方法";
     @EventHandler
-    public void onGroupMessage(@NotNull GroupMessageEvent event){   // 整合了命令处理(就是懒)
+    public void onGroupMessage(@NotNull GroupMessageEvent event){   // 对群内消息的处理
         MessageChain messages = event.getMessage();
         String user = String.valueOf(event.getSender().getId());
+        String question = "";
+        String command;
         if (messages.get(1) instanceof At && messages.get(1).equals(new At(event.getBot().getId()))){
-            String question = messages.get(2).contentToString();
-            String answer = controls.chat(user, question);
-            QuoteReply reply = new QuoteReply(event.getSource());
-            event.getGroup().sendMessage(reply.plus(tools.getError(answer)));
+            for (int i = 2; i < messages.size(); i++){
+                if (messages.get(i) instanceof At){
+                    question += messages.get(i).contentToString().split("@")[0]; // 拼接question (所以@bot 可以不是纯文本内容了)
+                }
+            }
+            if (!question.startsWith("#")) {                     // 允许@bot 接上命令了!
+                String answer = controls.chat(user, question);
+                QuoteReply reply = new QuoteReply(event.getSource());
+                event.getGroup().sendMessage(reply.plus(tools.getError(answer)));
+                return;
+            }
+            command = question;
         }
-        String command = messages.contentToString();
+        else command = messages.contentToString();
         String[] commands = command.split(" ");
         if (commands[0].equals("#创建")){
             if (commands.length == 2){

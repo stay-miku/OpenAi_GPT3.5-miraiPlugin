@@ -5,8 +5,6 @@ import net.mamoe.mirai.console.plugin.jvm.JvmPluginDescriptionBuilder;
 import net.mamoe.mirai.event.GlobalEventChannel;
 import top.staymiku.openaiPlugin.bot.events;
 import top.staymiku.openaiPlugin.openai.net;
-import top.staymiku.openaiPlugin.openai.controls;
-
 import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -29,6 +27,7 @@ public final class Plugin extends JavaPlugin {
             net.init(host[0], Integer.parseInt(host[1]));
         } catch (IOException e) {
             e.printStackTrace();
+            getLogger().error("can not load host config!");
         }
     }
 }
