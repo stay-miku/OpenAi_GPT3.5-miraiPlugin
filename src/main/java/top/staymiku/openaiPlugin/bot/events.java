@@ -269,6 +269,7 @@ public class events extends SimpleListenerHost {
                 if (messages.get(i) instanceof At){
                     question += messages.get(i).contentToString().split("@")[0]; // 拼接question (所以@bot 可以不是纯文本内容了)
                 }
+                else question += messages.get(i).contentToString();
             }
             if (question.equals("")) return;
             question = question.trim();
