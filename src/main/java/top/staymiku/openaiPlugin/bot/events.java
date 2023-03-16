@@ -267,7 +267,7 @@ public class events extends SimpleListenerHost {
         if (messages.get(1) instanceof At && messages.get(1).equals(new At(event.getBot().getId()))){
             for (int i = 2; i < messages.size(); i++){
                 if (messages.get(i) instanceof At){
-                    question += messages.get(i).contentToString().split("@")[0]; // 拼接question (所以@bot 可以不是纯文本内容了)
+                    question += ((At) messages.get(i)).getDisplay(event.getGroup()).split("@")[1]; // 拼接question (所以@bot 可以不是纯文本内容了)
                 }
                 else question += messages.get(i).contentToString();
             }
