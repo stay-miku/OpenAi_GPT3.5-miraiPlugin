@@ -267,14 +267,21 @@ public class events extends SimpleListenerHost {
             command = question;
         }
         else command = messages.contentToString();
-        tools.send(event, commandProcess(command, user));
+        String result = commandProcess(command, user);
+        if (result != null){
+            tools.send(event, result);
+        }
     }
     @EventHandler
     public void onFriendMessage(@NotNull FriendMessageEvent event){     // 增加私聊功能
         String messages = event.getMessage().contentToString();
         String user = String.valueOf(event.getSender().getId());
         if (messages.startsWith("#")){
-            tools.send(event, commandProcess(messages, user));
+            String result = commandProcess(messages, user);
+            if (result != null){
+                tools.send(event, result);
+            }
+            else tools.send(event, "未知的命令");
         }
         else {
             String answer = controls.chat(user, messages);
