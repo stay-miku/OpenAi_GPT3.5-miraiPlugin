@@ -244,6 +244,17 @@ public class events extends SimpleListenerHost {
                 return badParameter;
             }
         }
+        else if (commands[0].equals("#清除主人名字")){
+            if (commands.length == 1){
+                if (controls.set_owner_name(user, "")){
+                    return  "清除成功";
+                }
+                else return tools.userError;
+            }
+            else {
+                return badParameter;
+            }
+        }
         return null;
     }
     @EventHandler
@@ -258,6 +269,8 @@ public class events extends SimpleListenerHost {
                     question += messages.get(i).contentToString().split("@")[0]; // 拼接question (所以@bot 可以不是纯文本内容了)
                 }
             }
+            if (question.equals("")) return;
+            question = question.trim();
             if (!question.startsWith("#")) {                     // 允许@bot 接上命令了!
                 String answer = controls.chat(user, question);
                 QuoteReply reply = new QuoteReply(event.getSource());
