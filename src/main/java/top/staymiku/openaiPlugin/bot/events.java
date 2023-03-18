@@ -223,7 +223,9 @@ public class events extends SimpleListenerHost {
         }
         else if (commands[0].equals("#主人名字")){
             if (commands.length == 1){
-                return tools.getError(controls.get_owner_name(user));
+                String owner_name = controls.get_owner_name(user);
+                if (owner_name.equals("")) return "还没有设置主人名字哦";
+                return tools.getError(owner_name);
             }
             else {
                 return badParameter;

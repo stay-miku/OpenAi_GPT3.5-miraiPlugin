@@ -9,6 +9,7 @@ import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import top.staymiku.openaiPlugin.openai.immerse;
 
 public final class Plugin extends JavaPlugin {
     public static final Plugin INSTANCE = new Plugin();
@@ -25,6 +26,9 @@ public final class Plugin extends JavaPlugin {
             BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream("./openaiHost")));
             String[] host = reader.readLine().split(":");
             net.init(host[0], Integer.parseInt(host[1]));
+            if (!immerse.configureConnection()) {
+                getLogger().error("can not load immerse configuration!");
+            }
         } catch (IOException e) {
             e.printStackTrace();
             getLogger().error("can not load host config!");
