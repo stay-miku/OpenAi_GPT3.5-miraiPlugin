@@ -136,4 +136,19 @@ public class controls {   // String或List都要判断false
         parameters.add(user);
         return net.connection(parameters, 1).get(0);
     }
+    public static boolean set_immerse(String user, String target, String group){
+        immerse.setImmerse(user, target, group);
+        List<String> parameters = new ArrayList<>();
+        parameters.add("set_immerse");
+        parameters.add(user);
+        parameters.add(target);
+        parameters.add(group);
+        return net.connection(parameters, 1).get(0).equals("true");
+    }
+    public static boolean quit_immerse(String user){
+        List<String> parameters = new ArrayList<>();
+        parameters.add("quit_immerse");
+        parameters.add(user);
+        return net.connection(parameters, 1).get(0).equals("true");
+    }
 }

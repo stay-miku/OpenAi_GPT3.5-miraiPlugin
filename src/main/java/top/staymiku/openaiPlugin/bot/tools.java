@@ -2,9 +2,7 @@ package top.staymiku.openaiPlugin.bot;
 
 import net.mamoe.mirai.event.events.FriendMessageEvent;
 import net.mamoe.mirai.event.events.GroupMessageEvent;
-import net.mamoe.mirai.message.data.At;
-import net.mamoe.mirai.message.data.MessageChain;
-import net.mamoe.mirai.message.data.MessageChainBuilder;
+import net.mamoe.mirai.message.data.*;
 
 import java.util.Objects;
 
@@ -61,5 +59,16 @@ public class tools {
     public static void send(FriendMessageEvent event, String str){
         MessageChain messages = new MessageChainBuilder().append(str).build();
         event.getFriend().sendMessage(messages);
+    }
+    public static void immerseSend(GroupMessageEvent event, MessageChain messages, String target){
+        ForwardMessageBuilder builder = new ForwardMessageBuilder(event.getGroup());
+        builder.add(event.getSender().getId(), new At(event.getSender().getId()).getDisplay(event.getGroup()), new PlainText(event.getMessage().contentToString()));
+        builder.add(Long.parseLong(target), new At(Long.parseLong(target)).getDisplay(event.getGroup()), new PlainText(messages.contentToString()));
+        event.getGroup().sendMessage(builder.build());
+
+    }
+    public static void immerseSend(GroupMessageEvent event, String str, String target){
+        MessageChain messages = new MessageChainBuilder().append(str).build();
+        immerseSend(event, messages, target);
     }
 }

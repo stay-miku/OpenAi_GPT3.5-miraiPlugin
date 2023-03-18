@@ -8,6 +8,7 @@ import net.mamoe.mirai.message.data.MessageChain;
 import net.mamoe.mirai.message.data.QuoteReply;
 import org.jetbrains.annotations.NotNull;
 import top.staymiku.openaiPlugin.openai.controls;
+import top.staymiku.openaiPlugin.openai.immerse;
 
 import java.util.List;
 import java.util.Objects;
@@ -20,6 +21,7 @@ public class events extends SimpleListenerHost {
             "@bot <文本>:与机器人对话\n" +
             "#创建 <设定名字> [主人名字]: 创建,所有操作都需创建后执行(名字和主人名只对默认设定有效)\n" +
             "#预设 <问题> <回答>: 预设一段对话\n" +
+            "@某人 变猫娘: 进入沉浸模式,对不同人再次使用可以修改生效对象\n" +
             "以下命令会清除历史对话,小心使用:\n" +
             "#清除: 清除历史对话(失忆~)\n" +
             "#修改设定 <设定提示词>: 修改设定\n" +
@@ -258,6 +260,15 @@ public class events extends SimpleListenerHost {
                 return badParameter;
             }
         }
+        else if (commands[0].equals("#退出沉浸模式")){
+            if (commands.length == 1){
+                if (controls.quit_immerse(user)){
+                    return "退出成功";
+                }
+                else return "你还没有进入沉浸模式哦";
+            }
+            else return badParameter;
+        }
         return null;
     }
     @EventHandler
@@ -266,7 +277,38 @@ public class events extends SimpleListenerHost {
         String user = String.valueOf(event.getSender().getId());
         String question = "";
         String command;
-        if (messages.get(1) instanceof At && messages.get(1).equals(new At(event.getBot().getId()))){
+        String group = String.valueOf(event.getGroup().getId());
+        if (messages.get(1) instanceof At && !messages.get(1).equals(new At(event.getBot().getId()))){
+            String target = String.valueOf(((At)messages.get(1)).getTarget());
+            if (immerse.immerseCache.containsKey(user) && immerse.immerseCache.get(user).get("target").equals(target) && immerse.immerseCache.get("group").equals(group)){
+                for (int i = 2; i < messages.size(); i++){
+                    if (messages.get(i) instanceof At){
+                        question += ((At) messages.get(i)).getDisplay(event.getGroup()).split("@")[1]; // 拼接question (所以@bot 可以不是纯文本内容了)
+                    }
+                    else question += messages.get(i).contentToString();
+                }
+                if (question.equals("")) return;
+                question = question.trim();
+                if (!question.startsWith("#")) {                     // 允许@bot 接上命令了!
+                    String answer = controls.chat(user, question);
+                    QuoteReply reply = new QuoteReply(event.getSource());
+                    tools.immerseSend(event, reply.plus(tools.getError(answer)), target);
+                    return;
+                }
+                command = question;
+                String result = commandProcess(command, user);
+                if (result != null){
+                    tools.immerseSend(event, result, target);
+                }
+            }
+            else if (messages.size() == 3){
+                if (messages.get(2).contentToString().trim().equals("变猫娘")){
+                    controls.set_immerse(user, target, group);
+                    tools.immerseSend(event, "变猫娘了喵~", target);
+                }
+            }
+        }
+        else if (messages.get(1) instanceof At){
             for (int i = 2; i < messages.size(); i++){
                 if (messages.get(i) instanceof At){
                     question += ((At) messages.get(i)).getDisplay(event.getGroup()).split("@")[1]; // 拼接question (所以@bot 可以不是纯文本内容了)
@@ -282,11 +324,17 @@ public class events extends SimpleListenerHost {
                 return;
             }
             command = question;
+            String result = commandProcess(command, user);
+            if (result != null){
+                tools.send(event, result);
+            }
         }
-        else command = messages.contentToString();
-        String result = commandProcess(command, user);
-        if (result != null){
-            tools.send(event, result);
+        else {
+            command = messages.contentToString();
+            String result = commandProcess(command, user);
+            if (result != null){
+                tools.send(event, result);
+            }
         }
     }
     @EventHandler

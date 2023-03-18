@@ -42,4 +42,11 @@ public class immerse {
         }
         return true;
     }
+    public static void setImmerse(String user, String target, String group){
+        Map<String , String > single = new HashMap<>();
+        single.put("user", user);
+        single.put("target", target);
+        single.put("group", group);
+        immerseCache.put(user, single);
+    }
 }
