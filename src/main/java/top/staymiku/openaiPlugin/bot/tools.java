@@ -66,18 +66,18 @@ public class tools {
         String me1 = "";
         for (SingleMessage singleMessage : messages1) {
             if (singleMessage instanceof At) {
-                me1 += ((At) singleMessage).getDisplay(event.getGroup()).split("@")[1];
+                me1 += ((At) singleMessage).getDisplay(event.getGroup());
             } else me1 += singleMessage.contentToString();
         }
         String me2 = "";
         for (SingleMessage message : messages) {
             if (message instanceof At) {
-                me2 += ((At) message).getDisplay(event.getGroup()).split("@")[1];
+                me2 += ((At) message).getDisplay(event.getGroup());
             } else me2 += message.contentToString();
         }
 
-        builder.add(event.getSender().getId(), new At(event.getSender().getId()).getDisplay(event.getGroup()), new PlainText(me1));
-        builder.add(Long.parseLong(target), new At(Long.parseLong(target)).getDisplay(event.getGroup()), new PlainText(me2));
+        builder.add(event.getSender().getId(), new At(event.getSender().getId()).getDisplay(event.getGroup()).split("@")[1], new PlainText(me1));
+        builder.add(Long.parseLong(target), new At(Long.parseLong(target)).getDisplay(event.getGroup()).split("@")[1], new PlainText(me2));
         event.getGroup().sendMessage(builder.build());
 
     }
