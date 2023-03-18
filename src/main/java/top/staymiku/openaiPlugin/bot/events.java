@@ -41,7 +41,8 @@ public class events extends SimpleListenerHost {
             "#名字: 获取当前名字\n" +
             "#主人名字: 获取当前主人名字\n" +
             "#已使用token: 获取已使用token数量\n" +
-            "#温度: 获取当前温度";
+            "#温度: 获取当前温度\n" +
+            "#退出沉浸模式: 就是退出变猫娘模式";
     public static String badParameter = "错误的参数,使用#ai帮助 查看使用方法";
     public static String commandProcess(String command, String user){      // 独立出来的命令处理
         String[] commands = command.split(" ");
