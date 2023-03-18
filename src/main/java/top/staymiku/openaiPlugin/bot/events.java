@@ -280,7 +280,7 @@ public class events extends SimpleListenerHost {
         String group = String.valueOf(event.getGroup().getId());
         if (messages.get(1) instanceof At && !messages.get(1).equals(new At(event.getBot().getId()))){
             String target = String.valueOf(((At)messages.get(1)).getTarget());
-            if (immerse.immerseCache.containsKey(user) && immerse.immerseCache.get(user).get("target").equals(target) && immerse.immerseCache.get("group").equals(group)){
+            if (immerse.immerseCache.containsKey(user) && immerse.immerseCache.get(user).get("target").equals(target) && immerse.immerseCache.get(user).get("group").equals(group)){
                 for (int i = 2; i < messages.size(); i++){
                     if (messages.get(i) instanceof At){
                         question += ((At) messages.get(i)).getDisplay(event.getGroup()).split("@")[1]; // 拼接question (所以@bot 可以不是纯文本内容了)
