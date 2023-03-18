@@ -66,13 +66,13 @@ public class tools {
         String me1 = "";
         for (SingleMessage singleMessage : messages1) {
             if (singleMessage instanceof At) {
-                me1 += ((At) singleMessage).getDisplay(event.getGroup());
+                me1 += ((At) singleMessage).getDisplay(event.getGroup()).split("@")[1];
             } else me1 += singleMessage.contentToString();
         }
         String me2 = "";
         for (SingleMessage message : messages) {
             if (message instanceof At) {
-                me2 += ((At) message).getDisplay(event.getGroup());
+                me2 += ((At) message).getDisplay(event.getGroup()).split("@")[1];
             } else me2 += message.contentToString();
         }
 
