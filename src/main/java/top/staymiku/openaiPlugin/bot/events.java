@@ -360,7 +360,16 @@ public class events extends SimpleListenerHost {
 //        // 还是不做了吧(临时会话聊涩涩什么的看着就感觉容易被封号哇!)
 //    }
     @EventHandler
-    public void onNewFriendRequest(@NotNull NewFriendRequestEvent event){   // 为了允许私聊所以自动同意加好友请求(以后设一个管理员账号来管理加好友请求也不错)
-        event.accept();
+    public void onNewFriendRequest(@NotNull NewFriendRequestEvent event){   // 为了允许私聊所以自动同意加好友请求
+        String user = String.valueOf(event.getFromId());
+        System.out.println("new friend event: " + user);
+        if (controls.is_accept_new_friend(user)) {
+            event.accept();
+            System.out.println("accept new friend: " + user);
+        }
+        else {
+            event.reject(false);
+            System.out.println("reject new friend: " + user);
+        }
     }
 }

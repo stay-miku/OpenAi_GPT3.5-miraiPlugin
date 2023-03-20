@@ -146,8 +146,15 @@ public class controls {   // String或List都要判断false
         return net.connection(parameters, 1).get(0).equals("true");
     }
     public static boolean quit_immerse(String user){
+        immerse.immerseCache.remove(user);
         List<String> parameters = new ArrayList<>();
         parameters.add("quit_immerse");
+        parameters.add(user);
+        return net.connection(parameters, 1).get(0).equals("true");
+    }
+    public static boolean is_accept_new_friend(String user){
+        List<String> parameters = new ArrayList<>();
+        parameters.add("is_accept_new_friend");
         parameters.add(user);
         return net.connection(parameters, 1).get(0).equals("true");
     }
